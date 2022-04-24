@@ -1,4 +1,3 @@
-const { createTestScheduler } = require('jest');
 const Enemy = require('../lib/Enemy.js');
 const Potion = require('../lib/Potion.js');
 
@@ -15,10 +14,17 @@ test('creates an enemy object', () => {
     expect(enemy.potion).toEqual(expect.any(Object));
 });
 
-test("gets enemy health value", () => {
+test("gets enemy's health value", () => {
     const enemy = new Enemy('goblin', 'sword');
 
-    expect(enemy.getHealth()).toEqual(expect.stringContaining(enemy.health.toString())); //.stringContaining makes sure our string includes our enemy health
+    expect(enemy.getHealth()).toEqual(expect.stringContaining(enemy.health.toString()));
+});
+
+test('gets a description of the enemy', () => {
+    const enemy = new Enemy('goblin', 'sword');
+
+    expect(enemy.getDescription()).toEqual(expect.stringContaining('goblin'));
+    expect(enemy.getDescription()).toEqual(expect.stringContaining('sword'));
 });
 
 test('checks if enemy is alive or not', () => {
@@ -31,28 +37,23 @@ test('checks if enemy is alive or not', () => {
     expect(enemy.isAlive()).toBeFalsy();
 });
 
-test("subtracks from enemy health", () => {
+test("gets enemy's attack value", () => {
+    const enemy = new Enemy('goblin', 'sword');
+    enemy.strength = 10;
+
+    expect(enemy.getAttackValue()).toBeGreaterThanOrEqual(5);
+    expect(enemy.getAttackValue()).toBeLessThanOrEqual(15);
+});
+
+test("subtracts from enemy's health", () => {
     const enemy = new Enemy('goblin', 'sword');
     const oldHealth = enemy.health;
 
     enemy.reduceHealth(5);
 
     expect(enemy.health).toBe(oldHealth - 5);
-    enemy.reduceHealth(999999);
+
+    enemy.reduceHealth(99999);
+
     expect(enemy.health).toBe(0);
-});
-
-test("gets enemy attack value", () => {
-    const enemy = new Enemy('goblin', 'sword');;
-    enemy.strength = 10;
-
-    expect(enemy.getAttackValue()).toBeGreaterThanOrEqual(5);
-    expect(enemy.getAttackValue()).toBeLessThanOrEqual(15)
-});
-
-test('gets a desription of the enemy', () => { //checks to make sure that the string contains both the name and weapon
-    const enemy = new Enemy('goblin', 'sword');
-
-    expect(enemy.getDescription()).toEqual(expect.stringContaining('goblin'));
-    expect(enemy.getDescription()).toEqual(expect.stringContaining('sword'));
 });
